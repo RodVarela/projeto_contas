@@ -1,0 +1,14 @@
+# Arquivos gerados pelo Spring MVC
+target/
+*.class
+
+# Arquivos de log
+log/
+*.log
+
+# Arquivos de build
+build/
+bin/
+*.jar
+*.war
+*.ear
