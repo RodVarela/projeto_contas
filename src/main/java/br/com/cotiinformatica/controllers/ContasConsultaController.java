@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class RecuperarSenhaController {
+public class ContasConsultaController {
 
-	@RequestMapping(value = "/recuperar-senha") // Rota no navegador
-	public ModelAndView recuperarSenha() {
-		// WEB-INF/views/recuperar-senha.jsp
-		ModelAndView modelAndView = new ModelAndView("recuperar-senha");
+	@RequestMapping(value = "/admin/contas-consulta")
+	public ModelAndView contasConsulta() {
+		// WEB-INF/views/admin/contas-consulta.jsp
+		ModelAndView modelAndView = new ModelAndView("admin/contas-consulta");
 		return modelAndView;
 	}
 }
