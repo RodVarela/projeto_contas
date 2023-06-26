@@ -1,4 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,17 +20,34 @@
   
   <div class="m-4">
   	<div class="card">
-  		<div class="card-body">
-  			<h5>Dashboard principal</h5>
-  			<p>Seja bem vindo ao projeto contas!</p>
-  			
-  			<div class="row mt-3">
-  				<div class="col-md-6">
+  		<div class="card-body">  			
+  			  			
+  			<div class="row mt-2">
+  				<div class="col-md-3">  	
+  				
+  					<div class="card">
+  						<div class="card-body">
+  							<p>
+  								Data de início do período: <br/>
+  								<strong><fmt:formatDate value="${dataInicio}" pattern="EEEE dd/MM/yyyy"/></strong>
+  							</p>
+  							<p>
+  								Data de fim do período: <br/>
+  								<strong><fmt:formatDate value="${dataFim}" pattern="EEEE dd/MM/yyyy"/></strong>
+  							</p>
+  						</div>
+  					</div>
+  							
+  					<c:forEach items="${somatorioContas}" var="item">
+  						<div class="alert alert-secondary mt-2 mb-2">
+  							<h6>${item.name}</h6>
+  							<h3><fmt:formatNumber value="${item.value}" type="currency"/></h3>
+  						</div>
+  					</c:forEach>  					
+  				</div>
+  				<div class="col-md-9">
   					<div id="graficoPizza"></div>
-  				</div>
-  				<div class="col-md-6">
-  					<div id="graficoColunas"></div>	
-  				</div>
+  				</div>  				
   			</div>
   			
   		</div>
@@ -42,21 +61,10 @@
   
     // Dados para o gráfico de pizza
     var dadosPizza = [
-      ['Chrome', 45.0],
-      ['Firefox', 26.8],
-      ['Edge', 12.8],
-      ['Safari', 8.5],
-      ['Outros', 6.9]
+    	<c:forEach items="${somatorioContas}" var="item">
+    		['${item.name}', ${item.value}],
+    	</c:forEach>
     ];
-
-    // Dados para o gráfico de colunas
-    var dadosColunas = {
-      categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
-      series: [{
-        name: 'Vendas',
-        data: [100, 80, 120, 90, 110]
-      }]
-    };
 
     // Configurações do gráfico de pizza
     var opcoesPizza = {
@@ -67,7 +75,7 @@
         type: 'pie'
       },
       title: {
-        text: 'Distribuição de Navegadores'
+        text: 'Total de Receitas e Despesas'
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -83,34 +91,14 @@
         }
       },
       series: [{
-        name: 'Porcentagem',
+        name: 'Somatório',
         colorByPoint: true,
         data: dadosPizza
       }]
-    };
-
-    // Configurações do gráfico de colunas
-    var opcoesColunas = {
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'Vendas Mensais'
-      },
-      xAxis: {
-        categories: dadosColunas.categories
-      },
-      yAxis: {
-        title: {
-          text: 'Valor'
-        }
-      },
-      series: dadosColunas.series
-    };
+    };   
 
     // Criação dos gráficos
     var graficoPizza = Highcharts.chart('graficoPizza', opcoesPizza);
-    var graficoColunas = Highcharts.chart('graficoColunas', opcoesColunas);
     
   </script>
   

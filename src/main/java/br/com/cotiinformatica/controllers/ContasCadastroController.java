@@ -38,8 +38,14 @@ public class ContasCadastroController {
 			//DTO utilizado para capturar os campos do formulário
 			modelAndView.addObject("dto", new ContasCadastroDto());
 			
-			//criando uma lista com as categorias cadastradas pelo usuário
+			//criando uma lista com todas as categorias cadastradas pelo usuário
 			modelAndView.addObject("categorias", categoriaRepository.findAll(usuario.getIdUsuario()));
+			
+			//criando uma lista com as categorias de Receita cadastradas pelo usuário
+			modelAndView.addObject("categoriasR", categoriaRepository.findAllReceita(usuario.getIdUsuario()));
+			
+			//criando uma lista com as categorias de Receita cadastradas pelo usuário
+			modelAndView.addObject("categoriasD", categoriaRepository.findAllDespesa(usuario.getIdUsuario()));
 		}
 		catch(Exception e) {
 			modelAndView.addObject("mensagem", e.getMessage());
@@ -48,6 +54,7 @@ public class ContasCadastroController {
 		return modelAndView;
 	}
 	
+	//Metodo para cadastrar uma conta no banco de dados
 	@RequestMapping(value = "/admin/contas-cadastro-post", method = RequestMethod.POST)
 	public ModelAndView contasCadastroPost(ContasCadastroDto dto, HttpServletRequest request) {
 	
@@ -70,7 +77,8 @@ public class ContasCadastroController {
 			
 			modelAndView.addObject("mensagem", "Conta cadastrada com sucesso!");
 			modelAndView.addObject("dto", new ContasCadastroDto());
-			modelAndView.addObject("categorias", categoriaRepository.findAll(usuario.getIdUsuario()));
+			modelAndView.addObject("categoriasR", categoriaRepository.findAllReceita(usuario.getIdUsuario()));
+			modelAndView.addObject("categoriasD", categoriaRepository.findAllDespesa(usuario.getIdUsuario()));
 		}
 		catch(Exception e) {
 			modelAndView.addObject("mensagem", e.getMessage());

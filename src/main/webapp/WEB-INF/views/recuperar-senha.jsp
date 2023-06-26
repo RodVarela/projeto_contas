@@ -1,3 +1,5 @@
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,15 +19,21 @@
             <h5>Esqueci minha senha</h5>
           </div>
           <div class="card-body">
-            <form>            	
+          
+          	<div class="m-3 text-center">
+          		<h5>${mensagem}</h5>
+          	</div>
+          
+            <form method="post" action="recuperar-senha-post">            	
               <div class="mb-3">
                 <label for="email" class="form-label">Email de acesso:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <form:input path="dto.email" type="email" class="form-control" id="email" name="email" required="required"/>
               </div>
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary">Recuperar Senha</button>
               </div>
             </form>
+            
           </div>
           <div class="card-footer text-center">
             <a href="/projeto_contas/">Voltar</a> 
@@ -38,3 +46,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+

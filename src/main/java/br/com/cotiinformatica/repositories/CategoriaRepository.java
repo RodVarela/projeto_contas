@@ -22,77 +22,114 @@ public class CategoriaRepository {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	//método para inserir categoria no banco de dados
+	// método para inserir categoria no banco de dados
 	public void create(Categoria categoria) throws Exception {
 
 		String query = "insert into categoria(nome, tipo, idusuario) values(?,?,?)";
-		Object[] params = {
-			categoria.getNome(),
-			categoria.getTipo() == TipoCategoria.RECEITAS ? 1 
-				: categoria.getTipo() == TipoCategoria.DESPESAS ? 2 
-				: 0,
-			categoria.getIdUsuario()
-		};
-		
+		Object[] params = { categoria.getNome(), categoria.getTipo() == TipoCategoria.RECEITAS ? 1
+				: categoria.getTipo() == TipoCategoria.DESPESAS ? 2 : 0, categoria.getIdUsuario() };
+
 		jdbcTemplate.update(query, params);
 	}
 
 	public void update(Categoria categoria) throws Exception {
 
 		String query = "update categoria set nome=?, tipo=? where idcategoria=? and idusuario=?";
-		Object[] params = {
-			categoria.getNome(),
-			categoria.getTipo() == TipoCategoria.RECEITAS ? 1 
-					: categoria.getTipo() == TipoCategoria.DESPESAS ? 2 
-					: 0,
-			categoria.getIdCategoria(),
-			categoria.getIdUsuario()
-		};
-		
+		Object[] params = { categoria.getNome(),
+				categoria.getTipo() == TipoCategoria.RECEITAS ? 1
+						: categoria.getTipo() == TipoCategoria.DESPESAS ? 2 : 0,
+				categoria.getIdCategoria(), categoria.getIdUsuario() };
+
 		jdbcTemplate.update(query, params);
 	}
 
 	public void delete(Categoria categoria) throws Exception {
 
 		String query = "delete from categoria where idcategoria=? and idusuario=?";
-		Object[] params = {
-			categoria.getIdCategoria(),
-			categoria.getIdUsuario()
-		};
-		
+		Object[] params = { categoria.getIdCategoria(), categoria.getIdUsuario() };
+
 		jdbcTemplate.update(query, params);
 	}
+	
+	//Metodo para tarzer uma lista de todas categorias
+		public List<Categoria> findAll(Integer idUsuario) throws Exception {
 
-	public List<Categoria> findAll(Integer idUsuario) throws Exception {
+			String query = "select * from categoria where idusuario = ? order by nome";
+			Object[] params = { idUsuario };
 
-		String query = "select * from categoria where idusuario = ? order by nome";
-		Object[] params = { idUsuario };
-		
-		List<Categoria> categorias = jdbcTemplate.query(query, params, new RowMapper<Categoria>() {
+			List<Categoria> categorias = jdbcTemplate.query(query, params, new RowMapper<Categoria>() {
+
+				@Override
+				public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
+					Categoria categoria = new Categoria();
+					categoria.setIdCategoria(rs.getInt("idcategoria"));
+					categoria.setNome(rs.getString("nome"));
+					categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS
+							: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS : null);
+					categoria.setIdUsuario(rs.getInt("idusuario"));
+					return categoria;
+				}
+			});
+
+			return categorias;
+
+		}
+
+
+	//Metodo para tarzer uma lista de todas categorias de Receita
+	public List<Categoria> findAllReceita(Integer idUsuario) throws Exception {
+
+		String query = "select * from categoria where idusuario = ? and tipo = ? order by nome";
+		Object[] params = { idUsuario, 1 };
+
+		List<Categoria> categoriasReceita = jdbcTemplate.query(query, params, new RowMapper<Categoria>() {
 
 			@Override
 			public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Categoria categoria = new Categoria();
 				categoria.setIdCategoria(rs.getInt("idcategoria"));
 				categoria.setNome(rs.getString("nome"));
-				categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS 
-						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS
-						: null);
+				categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS
+						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS : null);
 				categoria.setIdUsuario(rs.getInt("idusuario"));
 				return categoria;
-			}				
+			}
 		});
-		
-		return categorias;
+
+		return categoriasReceita;
+
+	}
+	
+
+	//Metodo para tarzer uma lista de todas categorias de Despesa
+	public List<Categoria> findAllDespesa(Integer idUsuario) throws Exception {
+
+		String query = "select * from categoria where idusuario = ? and tipo = ? order by nome";
+		Object[] params = { idUsuario, 2 };
+
+		List<Categoria> categoriasDespesa = jdbcTemplate.query(query, params, new RowMapper<Categoria>() {
+
+			@Override
+			public Categoria mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Categoria categoria = new Categoria();
+				categoria.setIdCategoria(rs.getInt("idcategoria"));
+				categoria.setNome(rs.getString("nome"));
+				categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS
+						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS : null);
+				categoria.setIdUsuario(rs.getInt("idusuario"));
+				return categoria;
+			}
+		});
+
+		return categoriasDespesa;
+
 	}
 
 	public Categoria findById(Integer idCategoria, Integer idUsuario) throws Exception {
 
 		String query = "select * from categoria where idcategoria=? and idusuario=?";
-		Object[] params = {
-			idCategoria, idUsuario	
-		};
-		
+		Object[] params = { idCategoria, idUsuario };
+
 		List<Categoria> categorias = jdbcTemplate.query(query, params, new RowMapper<Categoria>() {
 
 			@Override
@@ -100,18 +137,17 @@ public class CategoriaRepository {
 				Categoria categoria = new Categoria();
 				categoria.setIdCategoria(rs.getInt("idcategoria"));
 				categoria.setNome(rs.getString("nome"));
-				categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS 
-						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS
-						: null);
+				categoria.setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS
+						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS : null);
 				categoria.setIdUsuario(rs.getInt("idusuario"));
 				return categoria;
-			}				
+			}
 		});
-		
-		//verificando se a lista trouxe 1 categoria do banco de dados
-		if(categorias.size() == 1)
-			return categorias.get(0); //retornar o primeiro elemento da lista
-		else 
-			return null; //retornar vazio
+
+		// verificando se a lista trouxe 1 categoria do banco de dados
+		if (categorias.size() == 1)
+			return categorias.get(0); // retornar o primeiro elemento da lista
+		else
+			return null; // retornar vazio
 	}
 }

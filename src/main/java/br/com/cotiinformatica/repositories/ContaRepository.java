@@ -40,7 +40,7 @@ public class ContaRepository {
 	
 	public void update(Conta conta) throws Exception {
 		
-		String query = "update conta set nome=?, valor=?, data, observacoes=?, idcategoria=? where idconta=? and idusuario=?";
+		String query = "update conta set nome=?, valor=?, data=?, observacoes=?, idcategoria=? where idconta=? and idusuario=?";
 		Object[] params = {
 			conta.getNome(),
 			conta.getValor(),
@@ -77,8 +77,8 @@ public class ContaRepository {
 		
 		Object[] params = {
 			idUsuario,
-			new SimpleDateFormat("yyyy-MM-dd").format(dataInicio),
-			new SimpleDateFormat("yyyy-MM-dd").format(dataFim)
+			new java.sql.Date(dataInicio.getTime()),
+			new java.sql.Date(dataFim.getTime())
 		};
 		
 		List<Conta> contas = jdbcTemplate.query(query, params, new RowMapper<Conta>() {
@@ -115,7 +115,7 @@ public class ContaRepository {
 	public Conta findById(Integer idConta, Integer idUsuario) throws Exception {
 		
 		String query = "select "
-				 + "conta.idconta, conta.nome as nomeconta, conta.valor, conta.data, conta.observacoes, "
+				 + "conta.idconta, conta.nome as nomeconta, conta.valor, conta.data, conta.observacoes, conta.idusuario, "
 				 + "categoria.idCategoria, categoria.nome as nomecategoria, categoria.tipo "
 				 + "from conta "
 				 + "inner join categoria on conta.idcategoria = categoria.idcategoria "
@@ -149,6 +149,7 @@ public class ContaRepository {
 				conta.getCategoria().setTipo(rs.getInt("tipo") == 1 ? TipoCategoria.RECEITAS 
 						: rs.getInt("tipo") == 2 ? TipoCategoria.DESPESAS
 						: null);
+				conta.setIdUsuario(rs.getInt("idusuario"));
 				
 				return conta;
 			}			

@@ -21,6 +21,7 @@ public class UsuarioRepository {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
+	//Metodo para criar um usuario no banco de dados
 	public void create(Usuario usuario) throws Exception {
 		
 		String query = "insert into usuario(nome, email, senha) values(?, ?, md5(?))";
@@ -28,6 +29,17 @@ public class UsuarioRepository {
 		
 		jdbcTemplate.update(query, params);
 	}
+	
+	//Método para atualiza o usuario no banco de dados
+	public void update(Usuario usuario) throws Exception{
+		
+		String query = "update usuario set nome=?, email=?, senha=md5(?) where idusuario=?";
+		Object[] params = { usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getIdUsuario() };
+		
+		jdbcTemplate.update(query, params);
+ 		
+	}
+	
 	
 	public Usuario findByEmail(String email) throws Exception {
 		
@@ -82,6 +94,9 @@ public class UsuarioRepository {
 		else
 			return null; //retornando vazio
 	}
+	
+	
+	
 	
 }
 
